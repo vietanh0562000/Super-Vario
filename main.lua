@@ -22,10 +22,27 @@ function love.load()
 
     gStateMachine:change('Play');
 
+    -- key input
+    love.keyboard.pressedKeys = {};
 end
 
+-- save input in a frame
+function love.keypressed(key)
+    love.keyboard.pressedKeys[key] = true;
+end
+
+-- check input (key was pressed) in current frame
+function love.keyboard.wasPressed(key)
+    print("input"..key);
+    return love.keyboard.pressedKeys[key];
+end
+
+-- update every frame
 function love.update(dt)
     gStateMachine:update(dt);
+
+    -- remove all input in this frame
+    love.keyboard.pressedKeys = {};
 end
 
 function love.draw()
@@ -40,13 +57,15 @@ end
 function LoadResource()
     -- load all image
     gTextures = {
-        ['background'] = love.graphics.newImage('graphics/backgrounds.png'),
-        ['alien'] = love.graphics.newImage('graphics/blue_alien.png'),
+        ['backgrounds'] = love.graphics.newImage('graphics/backgrounds.png'),
+        ['alien'] = love.graphics.newImage('graphics/pink_alien.png'),
         ['tiles'] = love.graphics.newImage('graphics/tiles.png')
     }
 
     gSprites = {
-
+        ['tiles'] = GetQuads(gTextures['tiles'], 16, 16, 3, 4, 0, 0),
+        ['backgrounds'] = GetQuads(gTextures['backgrounds'], 256, 128, 2, 0, 0, 0),
+        ['alien'] = GetQuads(gTextures['alien'], 16, 20, 0, 10, 0, 0)
     }
 
     -- load all fonts
@@ -59,3 +78,8 @@ function LoadResource()
 
     -- load all music
 end
+
+function love.conf(t)
+    t.console = true;
+end
+
